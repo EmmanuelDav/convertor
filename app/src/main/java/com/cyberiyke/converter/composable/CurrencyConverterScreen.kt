@@ -55,7 +55,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(20.dp)
+            .padding(25.dp)
     ) {
         // Top Section: Icon and Sign Up Button
         Row(
@@ -74,13 +74,14 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
             }
 
             Button(
+
                 onClick = { /* Handle sign up */ },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
             ) {
                 Text(
                     text = "Sign Up",
                     color = ColorAccent,
-                    fontSize = 16.sp
+                    fontSize = 18.sp
                 )
             }
         }
@@ -90,11 +91,12 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
             text = "Currency Calculator",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 50.dp),
+                .padding(top = 60.dp),
             color = ColorPrimary,
             fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Start,
+            style = TextStyle(letterSpacing = 4.sp)
         )
 
         // From Input
@@ -103,43 +105,6 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 .fillMaxWidth()
                 .padding(top = 40.dp)
         ) {
-            // From Currency Dropdown
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray, RoundedCornerShape(4.dp))
-                    .clickable { expandFromCurrencyCode = true }
-            ) {
-                Text(
-                    text = selectFromCurrencyCode,
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.CenterStart),
-                    color = Color.White,
-                    fontSize = 20.sp
-                )
-                DropdownMenu(
-                    expanded = expandFromCurrencyCode,
-                    onDismissRequest = { expandFromCurrencyCode = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                ) {
-                    listOf("EUR", "USD", "GBP").forEach { currency ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = currency, color = Color.Black)
-                            },
-                            onClick = {
-                                selectFromCurrencyCode = currency
-                                expandFromCurrencyCode = false
-                            }
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
 
             // Amount Input
             OutlinedTextField(
@@ -152,41 +117,109 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            // To Currency Dropdown
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.LightGray, RoundedCornerShape(4.dp))
-                    .clickable { expandToCurrencyCode = true }
+            // Amount Input
+            OutlinedTextField(
+                value = amountValue,
+                onValueChange = { amountValue = it },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Convert Value") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+            )
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            // From Currency Dropdown
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp) // Optional spacing
             ) {
-                Text(
-                    text = selectToCurrencyCode,
+                // From Currency Dropdown
+                Box(
                     modifier = Modifier
-                        .padding(16.dp)
-                        .align(Alignment.CenterStart),
-                    color = Color.White,
-                    fontSize = 20.sp
-                )
-                DropdownMenu(
-                    expanded = expandToCurrencyCode,
-                    onDismissRequest = { expandToCurrencyCode = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
+                        .weight(1f)
+                        .background(Color.LightGray, RoundedCornerShape(4.dp))
+                        .clickable { expandFromCurrencyCode = true }
                 ) {
-                    listOf("EUR", "USD", "GBP").forEach { currency ->
-                        DropdownMenuItem(
-                            text = {
-                                Text(text = currency, color = Color.Black)
-                            },
-                            onClick = {
-                                selectToCurrencyCode = currency
-                                expandToCurrencyCode = false
-                            }
-                        )
+                    Text(
+                        text = selectFromCurrencyCode,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterStart),
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
+                    DropdownMenu(
+                        expanded = expandFromCurrencyCode,
+                        onDismissRequest = { expandFromCurrencyCode = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    ) {
+                        listOf("EUR", "USD", "GBP").forEach { currency ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = currency, color = Color.Black)
+                                },
+                                onClick = {
+                                    selectFromCurrencyCode = currency
+                                    expandFromCurrencyCode = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // To Currency Dropdown
+
+
+                Column(
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_swap_horiz),
+                        contentDescription = "Sort Icon",
+                        modifier = Modifier.size(40.dp)
+                    )
+                }
+
+
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .background(Color.LightGray, RoundedCornerShape(4.dp))
+                        .clickable { expandToCurrencyCode = true }
+                ) {
+                    Text(
+                        text = selectToCurrencyCode,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .align(Alignment.CenterStart),
+                        color = Color.White,
+                        fontSize = 20.sp
+                    )
+                    DropdownMenu(
+                        expanded = expandToCurrencyCode,
+                        onDismissRequest = { expandToCurrencyCode = false },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                    ) {
+                        listOf("EUR", "USD", "GBP").forEach { currency ->
+                            DropdownMenuItem(
+                                text = {
+                                    Text(text = currency, color = Color.Black)
+                                },
+                                onClick = {
+                                    selectToCurrencyCode = currency
+                                    expandToCurrencyCode = false
+                                }
+                            )
+                        }
                     }
                 }
             }
+
+
+
 
             Spacer(modifier = Modifier.height(30.dp))
 
@@ -202,7 +235,9 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(ColorAccent)
+                colors = ButtonDefaults.buttonColors(ColorAccent),
+                shape = RoundedCornerShape(12.dp)
+
             ) {
                 Text(
                     text = "Convert",
@@ -226,6 +261,9 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 color = ColorPrimary,
                 textAlign = TextAlign.Center
             )
+
         }
+
+        TabLayoutWithIndicator()
     }
 }

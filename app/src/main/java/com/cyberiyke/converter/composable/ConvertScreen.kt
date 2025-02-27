@@ -1,184 +1,76 @@
-package com.cyberiyke.converter.composable
-
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
+import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.cyberiyke.converter.main.MainViewModel
-import com.cyberiyke.converter.utils.ConvertEvent
+import com.cyberiyke.converter.ui.theme.ColorPrimary
+import com.google.accompanist.pager.ExperimentalPagerApi
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalPagerApi::class)
 @Composable
-fun ConverterScreen(mainViewModel: MainViewModel) {
-    var selectFromCurrencyCode by remember { mutableStateOf("from") }
-    var selectToCurrencyCode by remember { mutableStateOf("to") }
-    var amountValue by remember { mutableStateOf(TextFieldValue()) }
+fun TabLayoutWithIndicator() {
+    var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Past 30 Days", "Past 90 Days")
 
-    var expandFromCurrencyCode by remember { mutableStateOf(false) }
-    var expandToCurrencyCode by remember { mutableStateOf(false) }
-
-    // Observe conversion state from the ViewModel
-    val conversionState by mainViewModel.conversion.collectAsState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Box(
+    Column {
+        // TabRow with Indicator
+        Surface(
             modifier = Modifier
-                .padding(top = 100.dp)
+                .height(48.dp) // Set a fixed height
                 .fillMaxWidth()
-                .background(Color.Gray)
-                .clickable {
-                    expandFromCurrencyCode = true
-                    //selectFromCurrencyCode = "from" // You may need to replace this with actual logic to select currency
-                }
+                .fillMaxHeight()
+                .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)), // Rounded corners only at the top
+            color = ColorPrimary // Background color
         ) {
-            Text(
-                text = selectFromCurrencyCode,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(end = 16.dp)
-            )
-            DropdownMenu(
-                expanded = expandFromCurrencyCode, // Adjust this condition based on your logic
-                onDismissRequest = { expandFromCurrencyCode = false},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .background(Color.White)
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                modifier = Modifier.height(48.dp), // Match the height of the Surface
+                containerColor = ColorPrimary, // Make the TabRow background transparent
+                indicator = { tabPositions ->
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]), // Use tabIndicatorOffset
+                        height = 6.dp,
+                        color = Color(0xFF1ABC9C) // Indicator color
+                    )
+                },
+                divider = {}
             ) {
-                val from = listOf("USD", "CAD", "NGN")
-                from.forEach { currency ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = currency, color = Color.Black)
-                        },
-                        onClick = {
-                            selectFromCurrencyCode = currency
-                            expandFromCurrencyCode = false
-                        }
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        text = { Text(title) },
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        modifier = Modifier.height(48.dp) // Match the height of the TabRow
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
-
-        // Similar logic for the "To" currency dropdown
-
-        Box(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .fillMaxWidth()
-                .background(Color.Gray)
-                .clickable {
-                    expandToCurrencyCode = true
-                }
-        ) {
-            Text(
-                text = selectToCurrencyCode,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .padding(end = 16.dp)
-            )
-            DropdownMenu(
-                expanded = expandToCurrencyCode, // Adjust this condition based on your logic
-                onDismissRequest = { expandToCurrencyCode = false},
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp)
-                    .background(Color.White)
-            ) {
-                val from = listOf("USD", "UZS", "WON")
-                from.forEach { currency ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(text = currency, color = Color.Black)
-                        },
-                        onClick = {
-                            selectToCurrencyCode = currency
-                            expandToCurrencyCode = false
-                        }
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
-            value = amountValue,
-            onValueChange = {
-                amountValue = it
-            },
-            label = { Text(text = "amount") }
-        )
-
-        Spacer(modifier = Modifier.height(60.dp))
-
-        Button(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            onClick = {
-                mainViewModel.getConvertRate(
-                    from = selectFromCurrencyCode,
-                    to = selectToCurrencyCode,
-                    amount = amountValue.text
-                )
-            }
-        ) {
-            Text(text = "Convert Rate")
-        }
-
-        Spacer(modifier = Modifier.padding(30.dp))
-
-        Text(
-            text = when (val event = conversionState) {
-                is ConvertEvent.Empty -> "No conversion data"
-                is ConvertEvent.Loading -> "Loading..."
-                is ConvertEvent.Error -> "Error: ${event.errorMessage ?: "Unknown error"}"
-                is ConvertEvent.Success -> "Converted amount: ${event.result}"
-            }, // Show converted amount
-            modifier = Modifier.fillMaxWidth(),
-            fontSize = 30.sp,
-            color = Color.Magenta,
-            style = TextStyle(
-                fontWeight = FontWeight.Bold,
+        // Content for each tab
+        when (selectedTabIndex) {
+            0 -> Text(
+                text = "Content for Past 30 Days",
+                modifier = Modifier.fillMaxSize(),
                 textAlign = TextAlign.Center
             )
-        )
+            1 -> Text(
+                text = "Content for Past 90 Days",
+                modifier = Modifier.fillMaxSize(),
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
