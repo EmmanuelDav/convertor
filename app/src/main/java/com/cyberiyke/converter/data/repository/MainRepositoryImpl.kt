@@ -34,5 +34,5 @@ class MainRepositoryImpl @Inject constructor(
             Resource.Error(e.message)
         }
     }
-
 }
+
