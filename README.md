@@ -36,7 +36,6 @@
 |    |
 |    ├── main
 |    |    ├── MainRepository
-|    |    ├── MainRepositoryImpl
 |    |    └── MainViewModel
 |    |
 └──  ├── utils
