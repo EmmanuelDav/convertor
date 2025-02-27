@@ -20,7 +20,7 @@ object AppModule {
     fun getConverterApi(): ConverterApi {
         return Retrofit
             .Builder()
-            .baseUrl("https://api.apilayer.com/currency_data/")
+            .baseUrl("http://data.fixer.io/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ConverterApi::class.java)

@@ -75,7 +75,7 @@ fun ConverterScreen(mainViewModel: MainViewModel) {
                     .padding(start = 16.dp, end = 16.dp)
                     .background(Color.White)
             ) {
-                val from = listOf("USD", "UZS", "WON")
+                val from = listOf("USD", "CAD", "NGN")
                 from.forEach { currency ->
                     DropdownMenuItem(
                         text = {
@@ -169,7 +169,7 @@ fun ConverterScreen(mainViewModel: MainViewModel) {
                 is ConvertEvent.Empty -> "No conversion data"
                 is ConvertEvent.Loading -> "Loading..."
                 is ConvertEvent.Error -> "Error: ${event.errorMessage ?: "Unknown error"}"
-                is ConvertEvent.Success -> "Converted amount: ${getFormatted(event.result.result)}"
+                is ConvertEvent.Success -> "Converted amount: ${event.result}"
             }, // Show converted amount
             modifier = Modifier.fillMaxWidth(),
             fontSize = 30.sp,
@@ -180,7 +180,4 @@ fun ConverterScreen(mainViewModel: MainViewModel) {
             )
         )
     }
-}
-private fun getFormatted(amount: Double): String {
-    return String.format("%.2f", amount)
 }

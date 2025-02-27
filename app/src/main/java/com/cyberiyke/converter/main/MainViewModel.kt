@@ -20,29 +20,42 @@ class MainViewModel @Inject constructor(
     val conversion: StateFlow<ConvertEvent>
         get() = _conversion
 
-    fun getConvertRate(
-        from :String,
-        to:String,
-        amount:String
-    ){
-        //amount check
-        if (amount.isBlank()){
-            return
-        }
+
+    /**
+        over here we did something simple but better,
+        (we i mean i) we converted it by knowing the value of the currency
+     */
+
+
+    fun getConvertRate(from: String, to: String, amount: String) {
+        if (amount.isBlank()) return
+
         viewModelScope.launch {
             _conversion.value = ConvertEvent.Loading
-            when(val result = mainRepository.convertRate(from ,to ,amount)){
+
+            when (val result = mainRepository.convertRate(from, to)) {
                 is Resource.Error -> {
                     _conversion.value = ConvertEvent.Error(result.message)
                 }
                 is Resource.Success -> {
-                    if (result.data != null){
-                        _conversion.value = ConvertEvent.Success(result.data)
-                    }else{
-                        _conversion.value = ConvertEvent.Error(null)
+                    val rates = result.data?.rates
+                    if (rates != null && rates.containsKey(from) && rates.containsKey(to)) {
+                        val fromRate = rates[from] ?: return@launch
+                        val toRate = rates[to] ?: return@launch
+                        val amountValue = amount.toDoubleOrNull() ?: return@launch
+
+                        // Perform the conversion when we have gotten the current rate of the currency
+                        // conversion = (amount the user inputted / the rate that the want to convert from) * rate they want to convert to
+
+                        val convertedAmount = (amountValue / fromRate) * toRate
+
+                        _conversion.value = ConvertEvent.Success(convertedAmount)
+                    } else {
+                        _conversion.value = ConvertEvent.Error("Invalid currency selection")
                     }
                 }
             }
         }
     }
+
 }

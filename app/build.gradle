@@ -5,6 +5,13 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.newInputStream())
+}
+
 android {
     namespace 'com.cyberiyke.convertor'
     compileSdk 34
@@ -20,6 +27,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField "String", "API_KEY", "\"${localProperties['API_KEY']}\""
     }
 
     buildTypes {
@@ -37,6 +45,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.11'
