@@ -2,27 +2,36 @@
 
 `Currency converter` app helps you to convert one currency to another currency
 
-📸 Screens01            |  📸 Screens02  |  📸 Screens03
-:-------------------------:|:-------------------------:|:-------------------------:
- ![Screenshot_20240329_081136](https://github.com/oybekjon94/currentConverter-jetpackCompose/assets/91370134/0a649d6b-fd77-4beb-8c0c-f424aea7ed14) | ![Screenshot_20240329_073445](https://github.com/oybekjon94/currentConverter-jetpackCompose/assets/91370134/05de79bf-5fdb-4955-bd24-90e200872b14) | ![Screenshot_20240329_073542](https://github.com/oybekjon94/currentConverter-jetpackCompose/assets/91370134/0fadc3c8-a879-4bea-ba24-99e8a9da8c87)
-
+📸 Screens01            |
+:-------------------------:|:
+<img src="screentshot/screenshot.jpg" height="600" width="300" hspace="40">
 
 ### 🏗️ Project Structure: 
 
 ````
 ├── src
 |    ├── composable
-|    |    └── ConvertScreen
+|    |    └── ConvertScreen.kt
+|    |    └── CurrencyConvertorScreen.kt
 |    |  
 |    ├── data
-|    |    ├── models
-|    |    |     ├── ExchangeResponse
-|    |    |     ├── Info
-|    |    |     └── Query
-|    |    └── ConvertApi
+|    |    └── local
+|    |    |     ├── dao
+|               |     └── RateDao.kt
+|    |    |     ├── entity
+|               |     └── RatesEntity.kt
+|    |    |     └── AppDatabase.kt
+|    |    └── remote
+|    |    |     ├── model
+|               |     └── RateResult
+|    |    |     └── ConvertorApi
+|    |    └── repository
+|    |    |     ├── MainRepository
+|    |    |     └── MainRepositoryImpl
 |    |
 |    ├── di
 |    |    └── AppModule
+|    |    └── DatabaseModule
 |    |
 |    ├── main
 |    |    ├── MainRepository
@@ -34,7 +43,7 @@
      |    └── Resource
      |
      ├── MainActivity
-     └── MyApp
+     └── Application
 ````
 
 ### 🔨 This sample app showcases the following:
@@ -62,4 +71,8 @@
 
 ## Contact
 
-You can connect with me here [LinkedIn](https://www.linkedin.com/in/oybek-kholikov-b354b6258/)
+You can connect with me here [LinkedIn](https://www.linkedin.com/in/emmanueldav/)
+
+## Project
+Other fintech open source project [HERE](https://github.com/EmmanuelDav/Fintech)
+
