@@ -49,7 +49,7 @@ class MainViewModel @Inject constructor(
 
                         val convertedAmount = (amountValue / fromRate) * toRate
 
-                        _conversion.value = ConvertEvent.Success(convertedAmount)
+                        _conversion.value = ConvertEvent.Success(getFormatted(convertedAmount))
                     } else {
                         _conversion.value = ConvertEvent.Error("Invalid currency selection")
                     }
@@ -58,5 +58,8 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun getFormatted(amount: Double): String {
+        return String.format("%.2f", amount)
+    }
 }
 

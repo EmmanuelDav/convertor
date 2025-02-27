@@ -2,6 +2,7 @@ package com.cyberiyke.converter.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.cyberiyke.converter.data.local.dao.RatesDao
@@ -16,6 +17,7 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
 
 @Database( entities = [RatesEntity::class], version = 1)
+//@TypeConverters(ConvertDoubleToJson::class)
 abstract class AppDatabase: RoomDatabase() {
 
     abstract fun getRateDao(): RatesDao

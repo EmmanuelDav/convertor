@@ -9,13 +9,13 @@ import com.google.gson.Gson
  */
 
 class ConvertDoubleToJson {
-    @TypeConverter
-    fun fromRatesMap(rates: Map<String, Double>): String {
-        return Gson().toJson(rates)
-    }
-
-    @TypeConverter
-    fun toRatesMap(ratesString: String): Map<String, Double> {
-        return Gson().fromJson(ratesString, object : TypeToken<Map<String, Double>>() {}.type)
-    }
+//    @TypeConverter
+//    fun fromRatesMap(rates: Map<String, Double>): String {
+//        return Gson().toJson(rates)
+//    }
+//
+//    @TypeConverter
+//    fun toRatesMap(ratesString: String): Map<String, Double> {
+//        return Gson().fromJson(ratesString, object : TypeToken<Map<String, Double>>() {}.type)
+//    }
 }

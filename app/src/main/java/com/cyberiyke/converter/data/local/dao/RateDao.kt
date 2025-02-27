@@ -10,7 +10,7 @@ import com.cyberiyke.converter.data.local.entity.RatesEntity
 interface RatesDao {
 
     @Query("SELECT * FROM exchange_rates WHERE base = :from LIMIT 1")
-    suspend fun getRates(from: String, to:String): RatesEntity?
+    suspend fun getRates(from: String): RatesEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRates(rates: RatesEntity)
