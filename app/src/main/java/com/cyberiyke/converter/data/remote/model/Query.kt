@@ -1,4 +1,4 @@
-package com.cyberiyke.converter.data.model
+package com.cyberiyke.converter.data.remote.model
 
 import com.google.gson.annotations.SerializedName
 

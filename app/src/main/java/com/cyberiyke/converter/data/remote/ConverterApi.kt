@@ -1,6 +1,6 @@
-package com.cyberiyke.converter.data
+package com.cyberiyke.converter.data.remote
 
-import com.cyberiyke.converter.data.model.ExchangeResponse
+import com.cyberiyke.converter.data.remote.model.ExchangeResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers

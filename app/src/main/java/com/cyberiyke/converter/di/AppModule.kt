@@ -1,8 +1,8 @@
 package com.cyberiyke.converter.di
 
-import com.cyberiyke.converter.data.ConverterApi
-import com.cyberiyke.converter.main.MainRepository
-import com.cyberiyke.converter.main.MainRepositoryImpl
+import com.cyberiyke.converter.data.remote.ConverterApi
+import com.cyberiyke.converter.data.repository.MainRepository
+import com.cyberiyke.converter.data.repository.MainRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

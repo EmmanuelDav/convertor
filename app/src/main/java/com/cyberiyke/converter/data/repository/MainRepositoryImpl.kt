@@ -1,7 +1,7 @@
-package com.cyberiyke.converter.main
+package com.cyberiyke.converter.data.repository
 
-import com.cyberiyke.converter.data.ConverterApi
-import com.cyberiyke.converter.data.model.ExchangeResponse
+import com.cyberiyke.converter.data.remote.ConverterApi
+import com.cyberiyke.converter.data.remote.model.ExchangeResponse
 import com.cyberiyke.converter.utils.Resource
 import javax.inject.Inject
 
