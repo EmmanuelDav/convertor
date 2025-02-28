@@ -59,14 +59,14 @@ You'll need to provide an API key to fetch the Currency rates. Currently the Rat
      └── Application
 ````
 
-### 🔨 This sample app showcases the following:
+## 🔨 This sample app showcases the following:
 - Kotlin
 - Clean and Simple UI with Jetpack Compose
 - Coroutines
 - MVVM(Model + View + ViewModel)
-- ApiLayer
 - Dagger Hilt for DI
 - Retrofit
+- Unit testing
 
 ### Built With 🛠
 - [Jetpack Compose](https://developer.android.com/jetpack/compose) - Jetpack Compose is Android’s modern toolkit for building native UI. It simplifies and accelerates UI development on Android. Quickly bring your app to life with less code, powerful tools, and intuitive Kotlin APIs.
