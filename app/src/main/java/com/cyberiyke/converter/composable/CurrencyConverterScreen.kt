@@ -36,6 +36,7 @@ import coil.compose.AsyncImage
 import com.cyberiyke.converter.main.MainViewModel
 import com.cyberiyke.converter.ui.theme.ColorAccent
 import com.cyberiyke.converter.ui.theme.ColorPrimary
+import com.cyberiyke.converter.ui.theme.InputBg
 import com.cyberiyke.converter.utils.ConvertEvent
 import com.cyberiyke.convertor.R
 
@@ -129,7 +130,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(5.dp)),
-                color = Color.LightGray // Background color for visibility
+                color = InputBg // Background color for visibility
             ) {
                 Text(
                     modifier = Modifier.padding(16.dp), // Adds padding inside the rounded area
@@ -156,7 +157,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color.LightGray, RoundedCornerShape(4.dp))
+                        .background(InputBg, RoundedCornerShape(4.dp))
                         .clickable { expandFromCurrencyCode = true }
                         .padding(8.dp)
                 ) {
@@ -222,7 +223,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .background(Color.LightGray, RoundedCornerShape(4.dp))
+                        .background(InputBg, RoundedCornerShape(4.dp))
                         .clickable { expandToCurrencyCode = true }
                         .padding(8.dp)
                 ) {

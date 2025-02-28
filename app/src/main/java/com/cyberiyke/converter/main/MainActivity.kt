@@ -9,10 +9,15 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.cyberiyke.converter.ui.theme.ColorPrimaryDark
 import com.cyberiyke.converter.ui.theme.CurrentConverterjetpackComposeTheme
+import com.cyberiyke.converter.ui.theme.InputBg
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
@@ -21,8 +26,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val systemUiController = rememberSystemUiController()
+            val statusBarColor = InputBg
+
+            // Set the status bar color
+            LaunchedEffect(systemUiController) {
+                systemUiController.setStatusBarColor(
+                    color = statusBarColor,
+                    darkIcons = false // Set to true for light status bar icons
+                )
+            }
+
             CurrentConverterjetpackComposeTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -33,3 +48,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+

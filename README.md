@@ -2,6 +2,9 @@
 
 `Currency converter` app helps you to convert one currency to another currency
 
+# Screenshot
+
+<img src= "screentshot/screenshot.jpeg" width = "400"/>
 
 ### 🏗️ Project Structure: 
 
