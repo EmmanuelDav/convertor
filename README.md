@@ -6,7 +6,7 @@
 
 <img src= "screentshot/screenshot.jpeg" width = "400"/>
 
-# Setup and API key 🔑
+### Setup and API key 🔑
 You'll need to provide an API key to fetch the Currency rates. Currently the Rates are fetched from [Fixer.io](https://fixer.io/)
 
 - Generate an API key (It's only 2 steps!) from [Fixer.io](https://fixer.io/)
