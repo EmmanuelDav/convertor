@@ -1,27 +1,34 @@
 package com.cyberiyke.convertor.data.remote
 
+import com.cyberiyke.convertor.BuildConfig
 import com.cyberiyke.convertor.data.remote.model.RatesResult
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okio.Okio
 import okio.buffer
 import okio.source
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
+
+/**
+ *
+ Over here we test the conversion rate to return expected response
+ this is important to simulate the api call in the RateRequest call
+
+ */
 
 class RateRequestTest {
 
     private lateinit var mockWebServer: MockWebServer
     private lateinit var service: RateRequest
 
-    @BeforeEach
+    @Before
     fun setUp() {
         mockWebServer = MockWebServer()
 
@@ -33,7 +40,7 @@ class RateRequestTest {
         service = retrofit.create(RateRequest::class.java)
     }
 
-    @AfterEach
+    @After
     fun tearDown() {
         mockWebServer.shutdown()
     }
@@ -44,25 +51,31 @@ class RateRequestTest {
         enqueueResponse("rates-response.json")
 
         // Act: Call the Retrofit service
-        val response: Response<RatesResult> = service.convertRate("your_api_key", "USD,NGN")
+        val response: Response<RatesResult> = service.convertRate(BuildConfig.API_KEY, "USD,NGN")
 
         // Assert: Verify the request and response
         val request = mockWebServer.takeRequest()
-        assertThat(request.path).isEqualTo("/latest?access_key=your_api_key&symbol=USD,NGN")
+        assertThat(request.path).isEqualTo("/latest?access_key=${BuildConfig.API_KEY}&symbol=USD%2CNGN")
 
         val ratesResult = response.body()
         assertThat(ratesResult).isNotNull()
         assertThat(ratesResult!!.success).isTrue()
-        assertThat(ratesResult.base).isEqualTo("USD")
-        assertThat(ratesResult.date).isEqualTo("2023-10-01") // Update this to match your mock data
-        assertThat(ratesResult.rates).containsExactlyEntriesIn(mapOf("NGN" to 450.0, "USD" to 1.0)) // Update this to match your mock data
+        assertThat(ratesResult.base).isEqualTo("EUR")
+        assertThat(ratesResult.date).isEqualTo("2025-02-28") // Update this to match your mock data
+        assertThat(ratesResult.rates).containsExactlyEntriesIn(mapOf("NGN" to 1560.650703, "USD" to 1.040496))
     }
 
-    private fun enqueueResponse(fileName: String) {
-        val inputStream = javaClass.classLoader!!.getResourceAsStream(fileName)
+    private fun enqueueResponse(fileName: String, headers: Map<String, String> = emptyMap()) {
+        val inputStream = javaClass.classLoader
+            .getResourceAsStream("api-response/$fileName")
         val source = inputStream.source().buffer()
         val mockResponse = MockResponse()
-            .setBody(source.readString(Charsets.UTF_8))
-        mockWebServer.enqueue(mockResponse)
+        for ((key, value) in headers) {
+            mockResponse.addHeader(key, value)
+        }
+        mockWebServer.enqueue(
+            mockResponse
+                .setBody(source.readString(Charsets.UTF_8))
+        )
     }
 }
