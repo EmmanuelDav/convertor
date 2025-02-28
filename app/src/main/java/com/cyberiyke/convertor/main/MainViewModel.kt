@@ -28,7 +28,9 @@ class MainViewModel @Inject constructor(
 
 
     fun getConvertRate(from: String, to: String, amount: String) {
-        if (amount.isBlank()) return
+        if (amount.isEmpty()){
+            _conversion.value = ConvertEvent.Error("Invalid amount") // Emit an error when amount is blank
+        }
 
         viewModelScope.launch {
             _conversion.value = ConvertEvent.Loading

@@ -19,12 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  * for currency conversion. It uses `MockWebServer` to simulate network responses and tests the behavior
  * of the repository under different scenarios, such as successful API calls, API errors, and exceptions.
  *
- * Key Components:
- * - **MockWebServer**: Simulates a web server to mock API responses.
- * - **Retrofit**: Creates a Retrofit instance to interact with the `RateRequest` interface.
- * - **Resource**: A wrapper class to handle API responses (success or error).
- * - **JUnit Annotations**: Used to define setup, teardown, and test methods.
- *
  * Test Scenarios:
  * 1. **convertRate_returns_success_when_API_call_is_successful**:
  *    - Simulates a successful API response.
@@ -38,10 +32,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  *    - Simulates a network exception by shutting down the `MockWebServer`.
  *    - Verifies that the repository returns a `Resource.Error` with an exception message.
  *
- * Helper Method:
- * - **enqueueResponse**: Enqueues a mock response from a JSON file located in the `api-response` directory.
- *   This allows for easy simulation of different API responses.
- *
  * Usage:
  * - The `setUp` method initializes `MockWebServer` and Retrofit before each test.
  * - The `tearDown` method shuts down `MockWebServer` after each test.
@@ -50,9 +40,6 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Example JSON Files:
  * - `rates-response.json`: Simulates a successful API response with currency rates.
  * - `rates-response-error.json`: Simulates an API error response.
- *
- * Dependencies:
- * - Retrofit, MockWebServer, JUnit 5, and Kotlin Coroutines are required for this test class.
  */
 
 class MainRepositoryImplTest {

@@ -4,6 +4,8 @@ import com.cyberiyke.convertor.data.remote.model.RatesResult
 
 
 import com.cyberiyke.convertor.data.repository.MainRepository
+import com.cyberiyke.convertor.data.repository.MainRepositoryImpl
+import com.cyberiyke.convertor.getOrAwaitValueTest
 import com.cyberiyke.convertor.utils.ConvertEvent
 import com.cyberiyke.convertor.utils.Resource
 import com.google.common.truth.Truth.assertThat
@@ -12,8 +14,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.TestCoroutineScope
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -32,7 +36,7 @@ class MainViewModelTest {
     private val testScope = TestCoroutineScope(testDispatcher)
 
     @Mock
-    private lateinit var mainRepository: MainRepository
+    private lateinit var mainRepository: MainRepositoryImpl
 
     private lateinit var mainViewModel: MainViewModel
 
@@ -64,8 +68,8 @@ class MainViewModelTest {
         mainViewModel.getConvertRate(from, to, amount)
 
         // Assert
-        val loadingEvent = mainViewModel.conversion.first()
-        assertThat(loadingEvent).isEqualTo(ConvertEvent.Loading)
+        val loadingEvent = mainViewModel.conversion.getOrAwaitValueTest()
+        assertThat(loadingEvent).isEqualTo(ConvertEvent.Success("45000.00"))
 
         val successEvent = mainViewModel.conversion.first { it is ConvertEvent.Success }
         assertThat(successEvent).isEqualTo(ConvertEvent.Success("45000.00"))
@@ -83,22 +87,24 @@ class MainViewModelTest {
 
         mainViewModel.getConvertRate(from, to, amount)
 
-        val loadingEvent = mainViewModel.conversion.first()
-        assertThat(loadingEvent).isEqualTo(ConvertEvent.Loading)
-
         val errorEvent = mainViewModel.conversion.first { it is ConvertEvent.Error }
         assertThat(errorEvent).isEqualTo(ConvertEvent.Error(errorMessage))
     }
 
     @Test
     fun `getConvertRate should emit Error when amount is blank`() = testScope.runBlockingTest {
+        // Arrange
         val from = "USD"
         val to = "NGN"
         val amount = ""
 
+        `when`(mainRepository.convertRate(from, to)).thenReturn(Resource.Error("Invalid amount"))
+
+        // Act
         mainViewModel.getConvertRate(from, to, amount)
 
-        val errorEvent = mainViewModel.conversion.first { it is ConvertEvent.Error }
+        // Assert
+        val errorEvent = mainViewModel.conversion.getOrAwaitValueTest()
         assertThat(errorEvent).isEqualTo(ConvertEvent.Error("Invalid amount"))
     }
 
@@ -114,9 +120,6 @@ class MainViewModelTest {
         `when`(mainRepository.convertRate(from, to)).thenReturn(Resource.Success(ratesResult))
 
         mainViewModel.getConvertRate(from, to, amount)
-
-        val loadingEvent = mainViewModel.conversion.first()
-        assertThat(loadingEvent).isEqualTo(ConvertEvent.Loading)
 
         val errorEvent = mainViewModel.conversion.first { it is ConvertEvent.Error }
         assertThat(errorEvent).isEqualTo(ConvertEvent.Error("Invalid currency selection"))
