@@ -2,9 +2,12 @@
 
 `Currency converter` app helps you to convert one currency to another currency
 
-# Screenshot
 
-<img src= "screentshot/screenshot.jpeg" width = "400"/>
+<h2 align="left">Screen Shots</h2>
+<h4 align="start">
+<img src="screenshots/screenshot.jpeg" width="30%" vspace="10" hspace="10">
+<img src="screenshots/screenshot1.jpeg" width="30%" vspace="10" hspace="10">
+
 
 ### Setup and API key 🔑
 You'll need to provide an API key to fetch the Currency rates. Currently the Rates are fetched from [Fixer.io](https://fixer.io/)
@@ -15,7 +18,7 @@ You'll need to provide an API key to fetch the Currency rates. Currently the Rat
     API_KEY = <INSERT_YOUR_API_KEY>
 ```
 - Build the app
-- Good Luck 🎉
+- Good  🎉
 
 ### 🏗️ Project Structure: 
 
@@ -25,7 +28,7 @@ You'll need to provide an API key to fetch the Currency rates. Currently the Rat
 |    |    └── ConvertScreen.kt
 |    |    └── CurrencyConvertorScreen.kt
 |    |  
-|    ├── data
+|    ├── dLuckata
 |    |    └── local
 |    |    |     ├── dao
 |               |     └── RateDao.kt
