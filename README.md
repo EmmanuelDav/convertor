@@ -5,8 +5,8 @@
 
 <h2 align="left">Screen Shots</h2>
 <h4 align="start">
-<img src="screenshots/screenshot.jpeg" width="30%" vspace="10" hspace="10">
-<img src="screenshots/screenshot1.jpeg" width="30%" vspace="10" hspace="10">
+<img src="screenshot/screenshot.jpeg" width="30%" vspace="10" hspace="10">
+<img src="screenshot/screenshot1.jpeg" width="30%" vspace="10" hspace="10">
 
 
 ### Setup and API key 🔑
