@@ -61,5 +61,22 @@ class MainViewModel @Inject constructor(
     private fun getFormatted(amount: Double): String {
         return String.format("%.2f", amount)
     }
+
+    val currencyToCountryMap = mapOf(
+        "USD" to "us", "EUR" to "eu", "GBP" to "gb",
+        "AUD" to "au", "CAD" to "ca", "CHF" to "ch",
+        "CNY" to "cn", "JPY" to "jp", "NZD" to "nz",
+        "SGD" to "sg", "HKD" to "hk", "INR" to "in",
+        "BRL" to "br", "ZAR" to "za", "MXN" to "mx",
+        "NGN" to "ng", "EGP" to "eg", "ARS" to "ar",
+        "COP" to "co", "KES" to "ke", "PKR" to "pk",
+        "BDT" to "bd", "GHS" to "gh", "UAH" to "ua",
+        "IQD" to "iq"
+    )
+
+    fun getFlagUrl(currencyCode: String): String {
+        return "https://flagcdn.com/w40/${currencyToCountryMap[currencyCode]}.png"
+    }
+
 }
 

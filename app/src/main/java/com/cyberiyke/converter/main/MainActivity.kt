@@ -1,6 +1,7 @@
 package com.cyberiyke.converter.main
 
 import CurrencyConverterView
+import TabLayoutWithIndicator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent

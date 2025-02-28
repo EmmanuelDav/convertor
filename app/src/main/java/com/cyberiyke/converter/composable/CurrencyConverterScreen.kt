@@ -2,9 +2,11 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Button
@@ -14,6 +16,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,12 +25,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.cyberiyke.converter.main.MainViewModel
 import com.cyberiyke.converter.ui.theme.ColorAccent
 import com.cyberiyke.converter.ui.theme.ColorPrimary
@@ -54,12 +59,14 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
             .background(Color.White)
-            .padding(25.dp)
     ) {
         // Top Section: Icon and Sign Up Button
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -91,7 +98,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
             text = "Currency Calculator",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 60.dp),
+                .padding(15.dp),
             color = ColorPrimary,
             fontSize = 50.sp,
             fontWeight = FontWeight.Bold,
@@ -99,11 +106,11 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
             style = TextStyle(letterSpacing = 4.sp)
         )
 
-        // From Input
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 40.dp)
+                .padding(15.dp)
+                .padding(top = 5.dp)
         ) {
 
             // Amount Input
@@ -118,20 +125,32 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
             Spacer(modifier = Modifier.height(15.dp))
 
             // Amount Input
-            OutlinedTextField(
-                value = amountValue,
-                onValueChange = { amountValue = it },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Convert Value") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-            )
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(5.dp)),
+                color = Color.LightGray // Background color for visibility
+            ) {
+                Text(
+                    modifier = Modifier.padding(16.dp), // Adds padding inside the rounded area
+                    text = when (val event = conversionState) {
+                        is ConvertEvent.Empty -> "No conversion data"
+                        is ConvertEvent.Loading -> "Loading..."
+                        is ConvertEvent.Error -> "Error: ${event.errorMessage ?: "Unknown error"}"
+                        is ConvertEvent.Success -> "Converted amount: ${event.result}"
+                    },
+                    color = Color.White // Text color
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(15.dp))
 
             // From Currency Dropdown
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp) // Optional spacing
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 // From Currency Dropdown
                 Box(
@@ -139,26 +158,46 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                         .weight(1f)
                         .background(Color.LightGray, RoundedCornerShape(4.dp))
                         .clickable { expandFromCurrencyCode = true }
+                        .padding(8.dp)
                 ) {
-                    Text(
-                        text = selectFromCurrencyCode,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterStart),
-                        color = Color.White,
-                        fontSize = 20.sp
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.align(Alignment.CenterStart) // Aligns everything inside
+                    ) {
+                        AsyncImage(
+                            model = mainViewModel.getFlagUrl(selectFromCurrencyCode),
+                            contentDescription = "Flag of $selectFromCurrencyCode",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp)) // Space between flag and text
+                        Text(
+                            text = selectFromCurrencyCode,
+                            color = Color.White,
+                            fontSize = 20.sp
+                        )
+                    }
+
                     DropdownMenu(
                         expanded = expandFromCurrencyCode,
                         onDismissRequest = { expandFromCurrencyCode = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
+                        modifier = Modifier.background(Color.White)
                     ) {
-                        listOf("EUR", "USD", "GBP").forEach { currency ->
+                        mainViewModel.currencyToCountryMap.keys.forEach { currency ->
                             DropdownMenuItem(
                                 text = {
-                                    Text(text = currency, color = Color.Black)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        AsyncImage(
+                                            model = mainViewModel.getFlagUrl(currency),
+                                            contentDescription = "Flag of $currency",
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .clip(CircleShape)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(text = currency, color = Color.Black)
+                                    }
                                 },
                                 onClick = {
                                     selectFromCurrencyCode = currency
@@ -169,11 +208,8 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                     }
                 }
 
-                // To Currency Dropdown
 
-
-                Column(
-                ) {
+                Column {
                     Image(
                         painter = painterResource(id = R.drawable.ic_swap_horiz),
                         contentDescription = "Sort Icon",
@@ -181,32 +217,53 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                     )
                 }
 
+                // To Currency Dropdown
 
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .background(Color.LightGray, RoundedCornerShape(4.dp))
                         .clickable { expandToCurrencyCode = true }
+                        .padding(8.dp)
                 ) {
-                    Text(
-                        text = selectToCurrencyCode,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .align(Alignment.CenterStart),
-                        color = Color.White,
-                        fontSize = 20.sp
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.align(Alignment.CenterStart) // Aligns everything inside
+                    ) {
+                        AsyncImage(
+                            model = mainViewModel.getFlagUrl(selectToCurrencyCode),
+                            contentDescription = "Flag of $selectToCurrencyCode",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp)) // Space between flag and text
+                        Text(
+                            text = selectToCurrencyCode,
+                            color = Color.White,
+                            fontSize = 20.sp
+                        )
+                    }
+
                     DropdownMenu(
                         expanded = expandToCurrencyCode,
                         onDismissRequest = { expandToCurrencyCode = false },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
+                        modifier = Modifier.background(Color.White)
                     ) {
-                        listOf("EUR", "USD", "GBP").forEach { currency ->
+                        mainViewModel.currencyToCountryMap.keys.forEach { currency ->
                             DropdownMenuItem(
                                 text = {
-                                    Text(text = currency, color = Color.Black)
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        AsyncImage(
+                                            model = mainViewModel.getFlagUrl(currency),
+                                            contentDescription = "Flag of $currency",
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .clip(CircleShape)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(text = currency, color = Color.Black)
+                                    }
                                 },
                                 onClick = {
                                     selectToCurrencyCode = currency
@@ -216,6 +273,7 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
                         }
                     }
                 }
+
             }
 
 
@@ -250,16 +308,12 @@ fun CurrencyConverterView(mainViewModel: MainViewModel) {
 
             // Conversion Result
             Text(
-                text = when (val event = conversionState) {
-                    is ConvertEvent.Empty -> "No conversion data"
-                    is ConvertEvent.Loading -> "Loading..."
-                    is ConvertEvent.Error -> "Error: ${event.errorMessage ?: "Unknown error"}"
-                    is ConvertEvent.Success -> "Converted amount: ${event.result}"
-                },
+                text = "Mid Market Exchange Rate Unknow",
                 modifier = Modifier.fillMaxWidth(),
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 color = ColorPrimary,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
             )
 
         }
